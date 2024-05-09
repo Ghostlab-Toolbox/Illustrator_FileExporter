@@ -52,13 +52,15 @@ function getPathData(pathItem) {
 
 // Main function to detect visible layers and export layer groups
 function main() {
+  var scriptFile = File($.fileName)
+  var scriptFolder = scriptFile.parent;
   var doc = app.activeDocument;
   var rootItems = doc.pageItems;
   for (var i = 0; i < rootItems.length; i++) {
     var rootItem = rootItems[i];
     if (rootItem.typename === "GroupItem" && isLayerVisible(rootItem)) {
       // If it's a layer group (folder), create a new folder for it and export its contents
-      var exportFolder = "C:/Users/Mandar/Desktop/StudyCrafter/Exporttest2/" + rootItem.name; // Adjust the export folder path
+      var exportFolder = scriptFolder.path + '/' + rootItem.name; 
       var newFolder = new Folder(exportFolder);
       newFolder.create();
       
@@ -66,7 +68,7 @@ function main() {
       exportLayerGroupAsSVG(rootItem, exportFolder, doc);
     } else if (rootItem.typename === "PathItem" && isLayerVisible(rootItem)) {
       // If it's a path item (layer), export it as an SVG file
-      var exportFolder = "/Path/To/Export/Folder"; // Adjust the export folder path
+      var exportFolder = scriptfolder.path; 
       var exportFile = new File(exportFolder + "/" + rootItem.name + ".svg");
       var combinedSVGContent = '<?xml version="1.0" encoding="utf-8"?>\n';
       combinedSVGContent += '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + doc.artboards[0].artboardRect.join(' ') + '">\n';
@@ -77,6 +79,7 @@ function main() {
       exportFile.close();
     }
   }
+  alert("exporting to - " + scriptFolder + "/")
 }
 
 // Call the main function
